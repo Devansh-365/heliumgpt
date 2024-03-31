@@ -6,7 +6,7 @@ export default function ChatIdPage({ params }: { params: { chatId: string } }) {
     <div className="relative w-full h-full flex flex-col">
       <div className="flex flex-col h-full w-full">
         <Body chatId={params.chatId} />
-        <div className="w-full fixed bottom-0">
+        <div className="w-full fixed bottom-0 bg-zinc-50 z-10 pt-4">
           <Form chatId={params.chatId} />
           <p className="w-full text-center text-xs text-neutral-400 my-2 lg:pr-[300px]">
             HeliumGPT could make errors. Consider checking important

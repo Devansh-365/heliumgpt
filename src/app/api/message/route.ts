@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const json = await req.json();
     const { content, chatId } = apiSchema.parse(json);
 
-    const message = await db.message.create({
+    const userMessage = await db.message.create({
       data: {
         content,
         role: "user",
@@ -29,17 +29,20 @@ export async function POST(req: Request) {
     });
 
     const systemPrompt = "";
-    const openAIResponse = await getCompletions(systemPrompt, content);
+    const openAIResponse = await getCompletions(systemPrompt, [
+      { role: "user", content: content },
+    ]);
     const result = await openAIResponse.json();
 
-    // const message = await db.message.create({
-    //   data: {
-    //     content,
-    //     chatId,
-    //   },
-    // });
+    const aiMessage = await db.message.create({
+      data: {
+        content: result.choices[0].message.content,
+        chatId,
+        role: "ai",
+      },
+    });
 
-    return NextResponse.json(result);
+    return NextResponse.json({ userMessage, aiMessage });
   } catch (error) {
     console.log("[MESSAGE_POST]", error);
     return new NextResponse("Internal error", { status: 500 });

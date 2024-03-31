@@ -22,7 +22,7 @@ export const Body = ({ chatId }: BodyProps) => {
       setLoading(true);
       try {
         const response = await axios.get(`/api/chats/${chatId}`);
-        setMessages(response.data.messages);
+        setMessages(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -44,8 +44,8 @@ export const Body = ({ chatId }: BodyProps) => {
 
   return (
     <>
-      <ScrollArea className="max-h-[calc(100%-150px)] h-full w-full flex-1">
-        <div className="px-4 sm:px-12 md:px-52 2xl:px-[430px] relative">
+      <ScrollArea className="mt-4 max-h-[calc(100%-150px)] h-full w-full flex-1 pb-32">
+        <div className="px-4 sm:px-12 relative">
           {messages &&
             messages.map((message) => (
               <MessageBox

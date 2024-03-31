@@ -9,17 +9,17 @@ interface MessageBoxProps {
 
 export const MessageBox = ({ message, userImageUrl }: MessageBoxProps) => {
   const nameString = message.role === "user" ? "You" : "HeliumGPT";
-  const imageUrl = message.role === "user" ? userImageUrl : "/logo.svg";
+  const imageUrl = message.role === "user" ? userImageUrl : "/helium.png";
 
   return (
-    <div className="flex space-x-3 items-start mb-10 max-w-[calc(80%)] md:max-w-full text-wrap">
-      <Avatar className="w-7 h-7 text-white fill-white">
-        <AvatarImage src={imageUrl} className="text-white fill-white" />
+    <div className="flex space-x-3 items-start mb-3 max-w-[calc(80%)] md:max-w-full text-wrap">
+      <Avatar className="w-7 h-7 text-black fill-black">
+        <AvatarImage src={imageUrl} className="text-black fill-white" />
         <AvatarFallback className="text-neutral-900 font-semibold">
           {nameString[0]}
         </AvatarFallback>
       </Avatar>
-      <div className="max-w-[calc(80%)]">
+      <div className="max-w-[calc(80%)] text-black">
         <h3 className="font-bold">{nameString}</h3>
         <div className="flex flex-grow flex-col gap-3 gap-y-5">
           <Markdown content={message.content} />

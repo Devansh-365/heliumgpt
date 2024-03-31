@@ -30,7 +30,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="h-full hidden lg:flex lg:flex-col lg:w-[300px] p-4">
+    <div className="sticky top-12 h-full hidden lg:flex lg:flex-col lg:w-[300px] p-4">
       <Button
         className="w-full flex justify-start items-center"
         onClick={createNewChat}

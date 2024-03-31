@@ -40,7 +40,7 @@ export const Form = ({ chatId }: FormProps) => {
   };
 
   return (
-    <div className="relative px-2 sm:px-12 md:px-52 lg:pr-[500px] 2xl:px-96 w-full bg-zinc-50">
+    <div className="relative px-2 sm:px-12 lg:pr-[460px] w-full bg-zinc-50">
       <Input
         placeholder="Message HeliumGPT..."
         className="border-[1px] border-neutral-500 ring-none rounded-xl bg-inherit text-black placeholder:text-neutral-400 h-12"
