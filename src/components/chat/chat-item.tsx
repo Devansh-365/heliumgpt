@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
+import { Chat } from "@prisma/client";
 import { ArrowDownToLine, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ChatItemProps {
-  chat: any;
+  chat: Chat;
   selected: boolean;
 }
 
@@ -13,13 +14,13 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
   //   const remove = useMutation(api.chats.remove);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(chat.title);
+  const [title, setTitle] = useState(chat.title || "");
 
   const router = useRouter();
 
   const hadleClick = () => {
     if (!selected) {
-      router.push(`/chat/${chat._id}`);
+      router.push(`/${chat.id}`);
     }
   };
 
@@ -44,7 +45,7 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
       key={chat.title}
       className={cn(
         "group relative flex w-full p-2 rounded-md hover:bg-zinc-300 cursor-pointer text-black text-sm",
-        selected && "bg-zinc-200"
+        selected ? "bg-zinc-200" : "bg-zinc-100 border border-zinc-300"
       )}
       onClick={hadleClick}
     >
@@ -58,7 +59,7 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
           className="outline-none bg-transparent w-[170px]"
         />
       ) : (
-        <div className="truncate max-w-[200px]">Hello</div>
+        <div className="truncate max-w-[200px]">{chat.title}</div>
       )}
       <div className="absolute top-1/2 -translate-y-1/2 right-2 flex z-10">
         {isEditing ? (

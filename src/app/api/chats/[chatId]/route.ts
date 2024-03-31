@@ -7,7 +7,10 @@ const apiSchema = z.object({
   title: z.string(),
 });
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params }: { params: { chatId: string } }
+) {
   try {
     const user = await getCurrentUser();
 
@@ -15,10 +18,13 @@ export async function GET(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const chats = await db.chat.findMany({
-      where: {
-        userId: user?.id,
-      },
+    if (!params?.chatId) {
+      return new NextResponse("Chat ID is required", { status: 400 });
+    }
+
+    const chats = await db.message.findMany({
+      where: { chatId: params.chatId },
+      orderBy: { createdAt: "asc" },
     });
 
     return NextResponse.json(chats);
