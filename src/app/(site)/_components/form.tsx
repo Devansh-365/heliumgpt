@@ -1,51 +1,53 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface FormProps {
   chatId: any;
 }
 
 export const Form = ({ chatId }: FormProps) => {
-  //   const chat = useQuery(api.chats.get, { id: chatId });
-  //   const sendMessage = useAction(api.messages.submit);
+  const { data: session, status } = useSession();
+  const [message, setMessage] = useState<string>("");
 
-  //   const [message, setMessage] = useState<string>("");
+  const handleSendMessage = async () => {
+    if (message === "") return;
+    console.log("message sent");
+    const temp = message;
+    setMessage("");
+    try {
+      const response = await axios.post("/api/message", {
+        role: "user",
+        content: temp,
+        chatId: chatId,
+      });
+      console.log("Message sent successfully:", response.data);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Something went wrong!");
+    }
+  };
 
-  //   if (chat === undefined) {
-  //     return null;
-  //   }
-
-  //   if (chat === null) {
-  //     return <div>Chat not found!</div>;
-  //   }
-
-  //   const handleSendMessage = async () => {
-  //     if (message === "") return;
-  //     console.log("message sent");
-  //     const temp = message;
-  //     setMessage("");
-  //     await sendMessage({
-  //       role: "user",
-  //       content: temp,
-  //       chatId: chat._id,
-  //     });
-  //   };
-
-  //   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //     if (e.key === "Enter") {
-  //       e.preventDefault();
-  //       handleSendMessage();
-  //     }
-  //   };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
     <div className="relative px-2 sm:px-12 md:px-52 lg:pr-[500px] 2xl:px-96 w-full bg-zinc-50">
       <Input
         placeholder="Message HeliumGPT..."
         className="border-[1px] border-neutral-500 ring-none rounded-xl bg-inherit text-black placeholder:text-neutral-400 h-12"
-        // value={message}
-        // onChange={(e) => setMessage(e.target.value)}
-        // onKeyDown={handleKeyDown}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
+        disabled={status !== "authenticated"}
       />
     </div>
   );
