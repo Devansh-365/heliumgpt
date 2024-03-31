@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function RegisterPage() {
   return (
@@ -29,8 +29,9 @@ export default function RegisterPage() {
           </h3>
         </div>
         <div className="flex flex-col space-y-3 px-4 py-6 sm:px-16">
-          <RegisterForm />
-
+          <Suspense fallback={<div>Loading...</div>}>
+            <RegisterForm />
+          </Suspense>
           <Link
             href="/login"
             className="text-center text-sm text-gray-500 underline"

@@ -2,10 +2,9 @@ import AuthForm from "@/components/forms/login-form";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
-import Image from "next/image";
 
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function LoginPage() {
   return (
@@ -29,7 +28,9 @@ export default function LoginPage() {
           </h3>
         </div>
         <div className="flex flex-col space-y-3 px-4 py-6 sm:px-16">
-          <AuthForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <AuthForm />
+          </Suspense>
 
           <Link
             href="/register"
