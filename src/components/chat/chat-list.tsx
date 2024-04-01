@@ -12,6 +12,10 @@ export const ChatList = () => {
   const { data: chats, error } = useSWR<Chat[]>(`/api/chats`, fetcher);
   const router = usePathname();
 
+  if (!chats) {
+    return <div className="text-black">Loading...</div>;
+  }
+
   return (
     <div className="mt-4 flex flex-col gap-1 flex-1 overflow-y-auto">
       {chats &&

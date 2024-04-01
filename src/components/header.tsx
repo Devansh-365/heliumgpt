@@ -1,10 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/session";
 import { UserAccountNav } from "./user-account-nav";
+import { useSession } from "next-auth/react";
 
-export async function Header() {
-  const user = await getCurrentUser();
+export function Header() {
+  const { data: session, status } = useSession();
 
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between w-full px-4 border-b h-14 shrink-0 bg-background backdrop-blur-xl">
@@ -42,13 +45,13 @@ export async function Header() {
           <span className="text-lg font-semibold">HeliumGPT</span>
         </Link>
       </span>
-      {user ? (
+      {status === "authenticated" ? (
         <>
           <UserAccountNav
             user={{
-              name: user?.name,
-              image: user?.image,
-              email: user?.email,
+              name: session?.user?.name,
+              image: session?.user?.image,
+              email: session?.user?.email,
             }}
           />
         </>
