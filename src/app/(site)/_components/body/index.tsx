@@ -6,31 +6,20 @@ import { MessageBox } from "./msg-box";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { Message } from "@prisma/client";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
 
 interface BodyProps {
   chatId: string;
 }
 
 export const Body = ({ chatId }: BodyProps) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { data: session, status } = useSession();
+  const { data: messages, error } = useSWR<Message[]>(
+    `/api/chats/${chatId}`,
+    fetcher
+  );
+  const { data: session } = useSession();
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`/api/chats/${chatId}`);
-        setMessages(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [chatId, messages]);
 
   useEffect(() => {
     scrollToBottom();
@@ -41,6 +30,9 @@ export const Body = ({ chatId }: BodyProps) => {
       scrollRef.current.scrollIntoView({ behavior: "auto" });
     }
   };
+
+  if (error) return <div>Failed to load messages</div>;
+  if (!messages) return <div>Loading messages...</div>;
 
   return (
     <>

@@ -7,6 +7,7 @@ import { ChatList } from "./chat/chat-list";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import { mutate } from "swr";
 
 export default function Sidebar() {
   const { data: session, status } = useSession();
@@ -23,6 +24,7 @@ export default function Sidebar() {
         return toast.error("Failed to create chat");
       }
       toast.success("New chat created:");
+      mutate(`/api/chats`);
     } catch (error) {
       console.error("Error creating chat:", error);
       alert("Failed to create chat. Please try again.");

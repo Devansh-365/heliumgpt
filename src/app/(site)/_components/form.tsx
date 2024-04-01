@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { mutate } from "swr";
 
 interface FormProps {
   chatId: any;
@@ -26,6 +27,7 @@ export const Form = ({ chatId }: FormProps) => {
         chatId: chatId,
       });
       console.log("Message sent successfully:", response.data);
+      mutate(`/api/chats/${chatId}`);
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Something went wrong!");

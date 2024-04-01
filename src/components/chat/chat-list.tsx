@@ -5,34 +5,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Chat } from "@prisma/client";
 import { usePathname } from "next/navigation";
+import { fetcher } from "@/lib/utils";
+import useSWR from "swr";
 
 export const ChatList = () => {
-  const [chats, setChats] = useState<Chat[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: chats, error } = useSWR<Chat[]>(`/api/chats`, fetcher);
   const router = usePathname();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`/api/chats`);
-        setChats(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (chats === null) {
-    return null;
-  }
 
   return (
     <div className="mt-4 flex flex-col gap-1 flex-1 overflow-y-auto">
