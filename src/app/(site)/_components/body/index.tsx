@@ -30,7 +30,7 @@ export const Body = ({ chatId }: BodyProps) => {
     };
 
     fetchData();
-  }, [chatId]);
+  }, [chatId, messages]);
 
   useEffect(() => {
     scrollToBottom();
