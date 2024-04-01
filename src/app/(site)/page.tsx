@@ -35,7 +35,7 @@ export default async function Home() {
             <h2>Authentication Required for HeliumGPT</h2>
             <p className="text-center max-w-sm text-sm text-neutral-400 my-2">
               Please log in to access HeliumGPT. Your authentication ensures
-              secure and personalized use."
+              secure and personalized use.
             </p>
             <Link
               href="/login"
