@@ -79,6 +79,12 @@ export async function DELETE(
       return new NextResponse("Chat id is required", { status: 400 });
     }
 
+    await db.message.deleteMany({
+      where: {
+        chatId: params.chatId,
+      },
+    });
+
     const chat = await db.chat.delete({
       where: {
         id: params.chatId,

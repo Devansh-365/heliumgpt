@@ -1,8 +1,11 @@
-import { cn } from "@/lib/utils";
+import { cn, fetcher } from "@/lib/utils";
 import { Chat } from "@prisma/client";
+import axios from "axios";
 import { ArrowDownToLine, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import useSWR, { mutate } from "swr";
 
 interface ChatItemProps {
   chat: Chat;
@@ -24,19 +27,25 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
     }
   };
 
-  const handleRename = () => {
-    // rename({ id: chat._id, title: title });
-    setIsEditing(false);
+  const handleRename = async (chatId: string) => {
+    try {
+      await axios.patch(`/api/chats/${chat.id}`, { title });
+      toast.success("Chat Name edited");
+      mutate(`/api/chats`);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating chat title:", error);
+    }
   };
 
-  const handleDelete = () => {
-    // remove({ id: chat._id });
-    router.push("/");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleRename();
+  const handleDelete = async (chatId: string) => {
+    try {
+      await axios.delete(`/api/chats/${chatId}`);
+      toast.success("Chat deleted");
+      mutate(`/api/chats`);
+      router.push("/");
+    } catch (error) {
+      console.error("Error deleting chat:", error);
     }
   };
 
@@ -54,7 +63,7 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          onBlur={handleRename}
+          onBlur={() => handleRename(chat.id)}
           autoFocus
           className="outline-none bg-transparent w-[170px]"
         />
@@ -64,7 +73,7 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
       <div className="absolute top-1/2 -translate-y-1/2 right-2 flex z-10">
         {isEditing ? (
           <button
-            onClick={handleRename}
+            onClick={() => handleRename(chat.id)}
             className={cn(
               "bg-gradient-to-r from-transparent from-0% to-zinc-300 to-30% pl-3 py-1",
               selected && "to-zinc-200"
@@ -82,7 +91,7 @@ export const ChatItem = ({ chat, selected }: ChatItemProps) => {
             <button onClick={() => setIsEditing(true)}>
               <Pencil className="w-4 h-4" />
             </button>
-            <button onClick={handleDelete}>
+            <button onClick={() => handleDelete(chat.id)}>
               <Trash2 className="w-4 h-4" />
             </button>
           </div>
